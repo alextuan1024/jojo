@@ -4,8 +4,12 @@
 package jojo
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -116,4 +120,84 @@ var fileDescriptor_cbed077fd493b760 = []byte{
 	0xf8, 0x50, 0x35, 0x09, 0x89, 0xeb, 0x81, 0xac, 0xd5, 0xc3, 0xb0, 0x53, 0x4a, 0x02, 0xbb, 0x44,
 	0x71, 0x41, 0x12, 0x1b, 0xd8, 0xbd, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x40, 0xfb, 0x5d,
 	0xb3, 0xc0, 0x00, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// PhantomClient is the client API for Phantom service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type PhantomClient interface {
+	RejectHumanity(ctx context.Context, in *RejectHumanityReq, opts ...grpc.CallOption) (*RejectHumanityResp, error)
+}
+
+type phantomClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewPhantomClient(cc *grpc.ClientConn) PhantomClient {
+	return &phantomClient{cc}
+}
+
+func (c *phantomClient) RejectHumanity(ctx context.Context, in *RejectHumanityReq, opts ...grpc.CallOption) (*RejectHumanityResp, error) {
+	out := new(RejectHumanityResp)
+	err := c.cc.Invoke(ctx, "/jojo.Phantom/RejectHumanity", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PhantomServer is the server API for Phantom service.
+type PhantomServer interface {
+	RejectHumanity(context.Context, *RejectHumanityReq) (*RejectHumanityResp, error)
+}
+
+// UnimplementedPhantomServer can be embedded to have forward compatible implementations.
+type UnimplementedPhantomServer struct {
+}
+
+func (*UnimplementedPhantomServer) RejectHumanity(ctx context.Context, req *RejectHumanityReq) (*RejectHumanityResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectHumanity not implemented")
+}
+
+func RegisterPhantomServer(s *grpc.Server, srv PhantomServer) {
+	s.RegisterService(&_Phantom_serviceDesc, srv)
+}
+
+func _Phantom_RejectHumanity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RejectHumanityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhantomServer).RejectHumanity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jojo.Phantom/RejectHumanity",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhantomServer).RejectHumanity(ctx, req.(*RejectHumanityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Phantom_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "jojo.Phantom",
+	HandlerType: (*PhantomServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "RejectHumanity",
+			Handler:    _Phantom_RejectHumanity_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "phantom.proto",
 }
