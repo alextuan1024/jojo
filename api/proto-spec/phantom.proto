@@ -8,8 +8,10 @@ service Phantom {
 
 message RejectHumanityReq {
     string name = 1;
+    int32 trace = 2;
 }
 
 message RejectHumanityResp {
     string line = 1;
+    int32 trace = 2;
 }
