@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package jojo;
+
+service Phantom {
+    rpc RejectHumanity (RejectHumanityReq) returns (RejectHumanityResp);
+}
+
+message RejectHumanityReq {
+    string name = 1;
+}
+
+message RejectHumanityResp {
+    string line = 1;
+}
